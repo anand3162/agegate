@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment variables — never commit real secrets
+.env
+.env.local
+.env.production
+
+# Firebase service account key — treat like a master password
+serviceAccountKey.json
+
+# Build output
+dist/
+build/
+
+# OS files
+.DS_Store
