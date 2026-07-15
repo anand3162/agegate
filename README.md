@@ -8,7 +8,7 @@ The tool does not replace ID checks or staff judgment. It is a decision-support 
 
 ## Status
 
-🚧 Under active development — Day 1 of 20.
+🚧 Under active development — Day 5 of 20.
 
 ## Tech Stack
 
@@ -28,4 +28,8 @@ During this learning phase, AgeGate is tested only with the developer and consen
 
 ## Setup
 
-_Setup instructions will be added as the project is built out._
+1. Clone the repo
+2. Go into the backend/ folder
+3. Run `npm install`
+4. Create a `.env` file with `MONGO_URI=your_connection_string`
+5. Run `node index.js`

@@ -1,7 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import Scan from './models/Scan.js';
 import scanRoutes from './routes/scans.js';
 
 
