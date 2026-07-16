@@ -2,8 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import scanRoutes from './routes/scans.js';
-
-
+import authRoutes from './routes/auth.js';
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -19,6 +18,7 @@ app.get('/api/health', (req,res) => {
 });
 
 app.use('/api/scans', scanRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

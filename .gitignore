@@ -8,6 +8,7 @@ node_modules/
 
 # Firebase service account key — treat like a master password
 serviceAccountKey.json
+testToken.js
 
 # Build output
 dist/
