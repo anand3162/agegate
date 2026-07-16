@@ -8,7 +8,7 @@ The tool does not replace ID checks or staff judgment. It is a decision-support 
 
 ## Status
 
-🚧 Under active development — Day 5 of 20.
+🚧 Under active development — Day 8 of 20.
 
 ## Tech Stack
 
