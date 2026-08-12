@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebase';
+import { storage, auth } from '../firebase';
 
 const AGE_THRESHOLD = 25;
 
@@ -58,6 +58,30 @@ function ScannerScreen() {
   });
 }
 
+async function handleConfirm(actionTaken) {
+  try {
+    const token = await auth.currentUser.getIdToken();
+    await fetch('http://localhost:3001/api/scans', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        estimatedAgeRange: String(result.age),
+        recommendation: result.recommendation,
+        actionTaken,
+        staffId: auth.currentUser.uid,
+        imageUrl: result.imageUrl,
+      }),
+    });
+    setResult(null);
+  } catch (err) {
+    setCameraError('Failed to save scan. Try again.');
+  }
+}
+
+
   function getRecommendation(age) {
     return age >= AGE_THRESHOLD ? "Looks Clear" : "Check ID";
   }
@@ -95,6 +119,8 @@ async function uploadImage(blob) {
           <p>Estimated Age: {result.age}</p>
           <p>Gender: {result.gender}</p>
           <p>Recommendation: {result.recommendation}</p>
+          <button onClick={() => handleConfirm('ID Checked')}>ID Checked</button>
+          <button onClick={() => handleConfirm('Not Needed')}>Not Needed</button>
         </div>
       )}
     </div>

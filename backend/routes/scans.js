@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Scan from '../models/Scan.js';
+import verifyToken from '../middleware/verifyToken.js';
 
 const router = express.Router();
 
@@ -13,9 +14,18 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get('/mine', verifyToken, async (req, res, next) => {
+  try {
+    const scans = await Scan.find({ staffId: req.user.uid });
+    res.status(200).json(scans);
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.post('/', async (req, res, next) => {
-  if (!req.body.estimatedAgeRange || !req.body.recommendation || !req.body.actionTaken || !req.body.staffId) {
+
+router.post('/', verifyToken, async (req, res, next) => {
+  if (!req.body.estimatedAgeRange || !req.body.recommendation || !req.body.actionTaken) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -24,7 +34,7 @@ router.post('/', async (req, res, next) => {
       estimatedAgeRange: req.body.estimatedAgeRange,
       recommendation: req.body.recommendation,
       actionTaken: req.body.actionTaken,
-      staffId: req.body.staffId,
+      staffId: req.user.uid,
       imageUrl: req.body.imageUrl,
     });
     await scan.save();
