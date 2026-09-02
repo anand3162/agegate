@@ -12,7 +12,7 @@ function History() {
     async function fetchScans() {
       try {
         const token = await auth.currentUser.getIdToken();
-        const res = await fetch('http://localhost:3001/api/scans/mine', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/scans/mine`, {
           headers: { 'Authorization': `Bearer ${token}` },
         });
         const data = await res.json();

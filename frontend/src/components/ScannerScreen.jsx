@@ -3,8 +3,7 @@ import * as faceapi from "face-api.js";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage, auth } from '../firebase';
 import { signOut } from 'firebase/auth';
-
-const AGE_THRESHOLD = 25;
+import { getRecommendation, getAgeRange, AGE_THRESHOLD } from '../utils/recommendation';
 
 function ScannerScreen() {
   const [result, setResult] = useState(null);
@@ -39,6 +38,7 @@ function ScannerScreen() {
   }, []);
 
   async function handleScan() {
+    setCameraError(null);
   const detection = await faceapi
     .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
     .withAgeAndGender();
@@ -62,7 +62,7 @@ function ScannerScreen() {
 async function handleConfirm(actionTaken) {
   try {
     const token = await auth.currentUser.getIdToken();
-    await fetch('http://localhost:3001/api/scans', {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/scans`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,19 +81,6 @@ async function handleConfirm(actionTaken) {
     setCameraError('Failed to save scan. Try again.');
   }
 }
-
-
-  function getRecommendation(age) {
-    return age >= AGE_THRESHOLD ? "Looks Clear" : "Check ID";
-  }
-
-  function getAgeRange(age) {
-    if (age < 18) return "Under 18";
-    if (age < 21) return "18-21";
-    if (age < 25) return "21-25";
-    if (age < 30) return "25-30";
-    return "30+";
-  }
 
   function captureFrame() {
     const video = videoRef.current;
