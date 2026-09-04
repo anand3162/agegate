@@ -5,5 +5,9 @@ export function getRecommendation(age) {
 }
 
 export function getAgeRange(age) {
-  return `${age - 2}–${age + 2}`;
+  if (age < 17) return 'Under 17';
+  if (age < 20) return '17–20';
+  if (age < 24) return '20–24';
+  if (age < 28) return '24–28';
+  return '28+';
 }

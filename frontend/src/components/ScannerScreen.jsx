@@ -39,22 +39,34 @@ function ScannerScreen() {
 
   async function handleScan() {
     setCameraError(null);
-  const detection = await faceapi
-    .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-    .withAgeAndGender();
 
-  if (!detection) {
-    setCameraError("No face detected. Try again.");
-    return;
+  const samples = 3;
+  let totalAge = 0;
+  let detectedGender = '';
+
+  for (let i = 0; i < samples; i++) {
+    const detection = await faceapi
+      .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+      .withAgeAndGender();
+
+    if (!detection) {
+      setCameraError("No face detected. Try again.");
+      return;
+    }
+
+    totalAge += detection.age;
+    detectedGender = detection.gender;
   }
+
+  const avgAge = Math.round(totalAge / samples);
 
   const blob = await captureFrame();
   const imageUrl = await uploadImage(blob);
 
   setResult({
-    gender: detection.gender,
-    ageRange: getAgeRange(Math.round(detection.age)),
-    recommendation: getRecommendation(Math.round(detection.age)),
+    gender: detectedGender,
+    ageRange: getAgeRange(avgAge),
+    recommendation: getRecommendation(avgAge),
     imageUrl,
   });
 }

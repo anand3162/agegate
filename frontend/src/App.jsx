@@ -3,11 +3,13 @@ import Login from "./components/Login";
 import ScannerScreen from "./components/ScannerScreen";
 import ProtectedRoute from './components/ProtectedRoute';
 import History from './components/History';
+import { Navigate } from 'react-router-dom';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+  <Route path="/" element={<Navigate to="/login" />} />
   <Route path="/login" element={<Login />} />
   <Route path="/scanner" element={
     <ProtectedRoute><ScannerScreen /></ProtectedRoute>
